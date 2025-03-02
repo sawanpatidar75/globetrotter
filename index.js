@@ -13,6 +13,18 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
+// Resolve __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve the frontend build
+app.use(express.static(path.join(__dirname, "globetrotter-frontend/dist")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "globetrotter-frontend/dist", "index.html"));
+  });
+  
+
 app.use('/api/destination', destinationRoutes);
 
 const PORT = process.env.PORT || 5000;
